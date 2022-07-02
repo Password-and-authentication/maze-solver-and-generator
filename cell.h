@@ -12,9 +12,6 @@ typedef struct cellstruct {
     cellptr neighbors[4];
     int walls[2];              // [0] = top wall, [1] = right wall
 
-    int x;
-    int y;
-
     int visited;
 } cell;
 

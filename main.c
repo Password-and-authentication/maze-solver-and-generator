@@ -27,33 +27,149 @@ void generatemaze(cellptr maze);
 int getrand();
 
 int main(int argc, char *argv[]) {
+    srand(time(0));
 
-    colMAX = rowMAX = (atoi(argv[1]));
+    if (argc == 1) {    
+        colMAX = rowMAX = 7; // default 
+    } else colMAX = rowMAX = (atoi(argv[1]));
 
-    static int rowmax;
 
     cell maze[rowMAX][colMAX];
 
-
     initcells(*maze);
-    
-    srand(time(0));
-    //printf("%d\n", getrand());
     generatemaze(*maze);
     printmaze(*maze);
 
-    
+    putchar(NEWLINE);
 
+    
     return 0;
 }
 
-int getrand() {
-    return (rand() % (3 - 0 + 1) + 0);
+
+void generatemaze(cellptr maze) {
+    cellptr start = maze;   
+    push(start);
+
+    int allVisited(cellptr cell);
+    int getrand(int min, int max);
+
+    // while stack is not empty
+    while (sp > 0) {
+        cellptr current = pop();
+
+        if (!allVisited(current)) {
+            push(current);
+
+            cellptr neighbor;
+            int dir = 0;
+
+            // get random neighbor that isnt NULL and isnt visited already
+            while ((neighbor = current->neighbors[dir = getrand(0, 3)]) == NULL || neighbor->visited == true)
+                    ;
+            
+
+            // each cell only has a right wall and a bottom wall
+            // so to modify for example the left wall of the current cell
+            // you would modify the right wall of the cell left to the current cell
+
+
+            if (dir == LEFT) {
+                neighbor->walls[RIGHT_WALL] = false;            // false = remove wall
+            }
+            if (dir == RIGHT) {
+                current->walls[RIGHT_WALL] = false;
+            }
+            if (dir == BOT) {
+                current->walls[BOT_WALL] = false;
+            }
+            if (dir == TOP) {
+                neighbor->walls[BOT_WALL] = false;
+            }
+        
+            neighbor->visited = true;
+            push(neighbor);         
+        }       
+    }
 }
 
+void printmaze(cellptr maze) {
+    cellptr cptr = maze;
+
+    // print the top part for whole maze:
+    for (int i = 0; i < (colMAX * 2); ++i) putchar('_');
+    putchar(NEWLINE);
+
+    for (int i = 0; i < (colMAX * rowMAX); ++i) {
+
+        // print left wall for whole maze
+        if (cptr->neighbors[LEFT] == NULL) putchar('|');
+
+        // bottom wall
+        if (cptr->walls[BOT_WALL] != false) {
+            putchar('_');
+        } else putchar(SPACE);
+
+        // right wall
+        if (cptr->walls[RIGHT_WALL] != false) {
+            putchar('|');
+        } else putchar(SPACE);
+        
+
+        // new row
+        if (cptr->neighbors[RIGHT] == NULL) {
+            putchar(NEWLINE);
+        }
+        cptr++; 
+    }
+}
+
+
+void initcells(cellptr maze) {
+    cellptr rowptr, colptr;
+    int row, col;
+
+    for (row = 0; row < rowMAX; ++row) {
+        rowptr = &maze[rowMAX * row];
+        colptr = rowptr;
+
+        for (col = 0; col < rowMAX; ++col) {  
+            if (row == TOP_ROW) {
+
+                // top row has no cells above them
+                colptr->neighbors[TOP] = NULL;                          
+            } else colptr->neighbors[TOP] = &(rowptr - rowMAX)[col];
+
+            if (row == BOT_ROW) {
+
+                // bottom row has no cells below them
+                colptr->neighbors[BOT] = NULL;
+            } else colptr->neighbors[BOT] = &(rowptr + rowMAX)[col];
+
+            if (col == FAR_LEFT) {
+
+                // left column has no cells left to them
+                colptr->neighbors[LEFT] = NULL;
+            } else colptr->neighbors[LEFT] = (colptr - 1);
+
+            if (col == FAR_RIGHT) {
+
+                // right column has no cells right to the,
+                colptr->neighbors[RIGHT] = NULL;
+            } else colptr->neighbors[RIGHT] = (colptr + 1);
+            
+            // set all walls to true at the start
+            colptr->walls[BOT_WALL] = true;                 
+            colptr->walls[RIGHT_WALL] = true;
+
+            colptr++->visited = false;   
+        }  
+    } 
+}
+
+
 int isNull(cellptr cell) {
-    return cell == NULL;
-    
+    return cell == NULL;  
 }
 
 int allVisited(cellptr cell) {
@@ -75,109 +191,6 @@ int allVisited(cellptr cell) {
     return (l && r && t && b);
 }
 
-
-void generatemaze(cellptr maze) {
-    cellptr start = maze;    
-    cellptr end;
-
-    push(start);
-    while (sp > 0) {
-        cellptr current = pop();
-        //printf("%d\n", sp);
-        //printf("%d %d\t", current->x, current->y);
-       // printf("%d\n", allVisited(current));
-        if (!allVisited(current)) {
-            push(current);
-            cellptr neighbor;
-            int dir = 0;
-            while (true) {
-                if ((neighbor = current->neighbors[dir = getrand()]) != NULL && neighbor->visited != true)
-                        break;
-            }
-
-                    
-            //printf("%d %d\t", current->x, current->y);
-            //printf("%d %d\n", neighbor->x, neighbor->y);
-            
-
-            if (dir == LEFT) {
-                neighbor->walls[RIGHT_WALL] = 0;
-            }
-            if (dir == RIGHT) {
-                current->walls[RIGHT_WALL] = 0;
-            }
-            if (dir == BOT) {
-                current->walls[BOT_WALL] = 0;
-            }
-            if (dir == TOP) {
-                neighbor->walls[BOT_WALL] = 0;
-            }
-        
-            neighbor->visited = true;
-            push(neighbor);  
-            
-            end = current;
-        }       
-    }
-}
-
-void printmaze(cellptr maze) {
-    cellptr cptr = maze;
-
-    for (int i = 0; i < (colMAX * 2); ++i) putchar('_');
-    putchar(NEWLINE);
-
-    for (int i = 0; i < (colMAX * rowMAX); ++i) {
-
-        
-        if (cptr->neighbors[LEFT] == NULL) putchar('|');
-
-        
-        if (cptr->walls[BOT_WALL] != 0) {
-            putchar('_');
-        } else putchar(SPACE);
-        if (cptr->neighbors[LEFT] != NULL) {
-            if (cptr->walls[RIGHT_WALL] != 0) {
-                putchar('|');
-            } else putchar(SPACE);
-        }
-
-        if (cptr++->neighbors[RIGHT] == NULL) {
-            putchar(NEWLINE);
-        }
-        
-    }
-}
-
-
-void initcells(cellptr maze) {
-    cellptr rowptr, colptr;
-    int row, col;
-
-    for (row = 0; row < rowMAX; ++row) {
-        rowptr = &maze[rowMAX * row];
-        colptr = rowptr;
-        for (col = 0; col < rowMAX; ++col) {  
-            if (row == TOP_ROW) {
-                //printf("%d\n", row);
-                colptr->neighbors[TOP] = NULL;
-            } else colptr->neighbors[TOP] = &(rowptr - rowMAX)[col];
-            if (row == BOT_ROW) {
-                colptr->neighbors[BOT] = NULL;
-            } else colptr->neighbors[BOT] = &(rowptr + rowMAX)[col];
-            if (col == FAR_LEFT) {
-                colptr->neighbors[LEFT] = NULL;
-            } else colptr->neighbors[LEFT] = (colptr - 1);
-            if (col == FAR_RIGHT) {
-                colptr->neighbors[RIGHT] = NULL;
-            } else colptr->neighbors[RIGHT] = (colptr + 1);
-            
-            colptr->x = col;
-            colptr->y = row;
-            colptr->visited = 0;
-            colptr->walls[BOT_WALL] = 1;
-            colptr->walls[RIGHT_WALL] = 1;
-            ++colptr;     
-        }  
-    } 
+int getrand(int min, int max) {
+    return (rand() % (max - min + 1) + min);
 }
