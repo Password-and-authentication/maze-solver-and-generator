@@ -6,6 +6,12 @@
 #define FAR_LEFT 0
 #define FAR_RIGHT 9
 
+#define BOT_WALL 0
+#define RIGHT_WALL 1
+
+#define NEWLINE 10
+#define SPACE 32
+
 typedef struct cellstruct *cellptr;
 
 
@@ -14,7 +20,7 @@ typedef struct cellstruct {
     cellptr right;
     cellptr top;
     cellptr bot;
-    int *walls[2];              // [0] = top wall, [1] = right wall
+    int walls[2];              // [0] = top wall, [1] = right wall
 
     int visited;
 } cell;
@@ -27,9 +33,9 @@ int main() {
 
     cell maze[10][10];
     initializeMaze(*maze);
-    cellptr c = &maze[9][9];
-    c->visited = 1;
-    c->left->visited = 1;
+    cellptr c = &maze[0][0];
+    
+    
     printMaze(*maze);
 
     
@@ -43,11 +49,20 @@ void printMaze(cellptr maze) {
     
     for (int i = 0; i< 100; ++i) {
         //if (cptr->right == NULL) printf("NEW ROW\n");
-        printf("%d ", cptr->visited);
-        
-        if (cptr++->right == NULL) putchar(10);
+        if (cptr->walls[RIGHT_WALL] != 0) {
+            putchar('|');
+        } else putchar(SPACE);
+        if (cptr->walls[BOT_WALL] != 0) {
+            putchar('_');
+        } else putchar(SPACE);
+
+        if (cptr++->right == NULL) {
+            putchar('|');
+            putchar(NEWLINE);
+        }
     }
 }
+
 
 void initializeMaze(cellptr maze) {
     cellptr rowptr, colptr;
@@ -59,11 +74,7 @@ void initializeMaze(cellptr maze) {
         for (col = 0; col < 10; ++col) {  
             if (row == TOP_ROW) {
                 colptr->top = NULL;
-            } else {
-                colptr->top = &(rowptr - 10)[col];
-                
-
-            }
+            } colptr->top = &(rowptr - 10)[col];
             if (row == BOT_ROW) {
                 colptr->bot = NULL;
             } else colptr->bot = &(rowptr + 10)[col];
@@ -73,8 +84,10 @@ void initializeMaze(cellptr maze) {
             if (col == FAR_RIGHT) {
                 colptr->right = NULL;
             } else colptr->right = (colptr + 1);
-
+            
             colptr->visited = 0;
+            colptr->walls[BOT_WALL] = 1;
+            colptr->walls[RIGHT_WALL] = 1;
             ++colptr;     
         }
         
