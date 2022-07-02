@@ -5,33 +5,38 @@
 #include "cell.h"
 
 
+#define NEWLINE 10
+#define SPACE 32
+#define true 1
+#define false 0
+
 #define TOP_ROW 0
-#define BOT_ROW 9
+#define BOT_ROW (rowMAX - 1)
 #define FAR_LEFT 0
-#define FAR_RIGHT 9
+#define FAR_RIGHT (colMAX - 1)
 
 #define BOT_WALL 0
 #define RIGHT_WALL 1
 
-#define NEWLINE 10
-#define SPACE 32
-
-#define true 1
-#define false 0
-
+static int rowMAX;
+static int colMAX;
 
 void initcells(cellptr maze);
 void printmaze(cellptr maze);
 void generatemaze(cellptr maze);
 int getrand();
 
-int main() {
+int main(int argc, char *argv[]) {
 
-    cell maze[10][10];
+    colMAX = rowMAX = (atoi(argv[1]));
+
+    static int rowmax;
+
+    cell maze[rowMAX][colMAX];
 
 
     initcells(*maze);
-    printmaze(*maze);
+    
     srand(time(0));
     //printf("%d\n", getrand());
     generatemaze(*maze);
@@ -48,6 +53,7 @@ int getrand() {
 
 int isNull(cellptr cell) {
     return cell == NULL;
+    
 }
 
 int allVisited(cellptr cell) {
@@ -71,15 +77,15 @@ int allVisited(cellptr cell) {
 
 
 void generatemaze(cellptr maze) {
-    cellptr init = maze;    
-    
+    cellptr start = maze;    
+    cellptr end;
 
-    push(init);
+    push(start);
     while (sp > 0) {
         cellptr current = pop();
         //printf("%d\n", sp);
-        printf("%d %d\t", current->x, current->y);
-        printf("%d\n", allVisited(current));
+        //printf("%d %d\t", current->x, current->y);
+       // printf("%d\n", allVisited(current));
         if (!allVisited(current)) {
             push(current);
             cellptr neighbor;
@@ -110,33 +116,35 @@ void generatemaze(cellptr maze) {
             neighbor->visited = true;
             push(neighbor);  
             
-        }
-        
+            end = current;
+        }       
     }
 }
 
-
 void printmaze(cellptr maze) {
     cellptr cptr = maze;
-    
-    for (int i = 0; i< 100; ++i) {
-        //if (cptr->right == NULL) printf("NEW ROW\n");
-        if (cptr->walls[RIGHT_WALL] != 0) {
-            putchar('|');
-        } else putchar(SPACE);
+
+    for (int i = 0; i < (colMAX * 2); ++i) putchar('_');
+    putchar(NEWLINE);
+
+    for (int i = 0; i < (colMAX * rowMAX); ++i) {
+
+        
+        if (cptr->neighbors[LEFT] == NULL) putchar('|');
+
+        
         if (cptr->walls[BOT_WALL] != 0) {
             putchar('_');
         } else putchar(SPACE);
+        if (cptr->neighbors[LEFT] != NULL) {
+            if (cptr->walls[RIGHT_WALL] != 0) {
+                putchar('|');
+            } else putchar(SPACE);
+        }
 
         if (cptr++->neighbors[RIGHT] == NULL) {
-            putchar('|');
             putchar(NEWLINE);
         }
-        /*printf("%d ", cptr->visited);
-        if (cptr->neighbors[RIGHT] == NULL) {
-            putchar(10);
-        }
-        ++cptr;*/
         
     }
 }
@@ -146,17 +154,17 @@ void initcells(cellptr maze) {
     cellptr rowptr, colptr;
     int row, col;
 
-    for (row = 0; row < 10; ++row) {
-        rowptr = &maze[10 * row];
+    for (row = 0; row < rowMAX; ++row) {
+        rowptr = &maze[rowMAX * row];
         colptr = rowptr;
-        for (col = 0; col < 10; ++col) {  
+        for (col = 0; col < rowMAX; ++col) {  
             if (row == TOP_ROW) {
-                printf("%d\n", row);
+                //printf("%d\n", row);
                 colptr->neighbors[TOP] = NULL;
-            } else colptr->neighbors[TOP] = &(rowptr - 10)[col];
+            } else colptr->neighbors[TOP] = &(rowptr - rowMAX)[col];
             if (row == BOT_ROW) {
                 colptr->neighbors[BOT] = NULL;
-            } else colptr->neighbors[BOT] = &(rowptr + 10)[col];
+            } else colptr->neighbors[BOT] = &(rowptr + rowMAX)[col];
             if (col == FAR_LEFT) {
                 colptr->neighbors[LEFT] = NULL;
             } else colptr->neighbors[LEFT] = (colptr - 1);
@@ -164,13 +172,12 @@ void initcells(cellptr maze) {
                 colptr->neighbors[RIGHT] = NULL;
             } else colptr->neighbors[RIGHT] = (colptr + 1);
             
-            colptr->y = row;
             colptr->x = col;
+            colptr->y = row;
             colptr->visited = 0;
             colptr->walls[BOT_WALL] = 1;
             colptr->walls[RIGHT_WALL] = 1;
             ++colptr;     
-        }
-        
+        }  
     } 
 }

@@ -14,6 +14,7 @@ typedef struct cellstruct {
 
     int x;
     int y;
+
     int visited;
 } cell;
 

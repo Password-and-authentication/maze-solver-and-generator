@@ -1,6 +1,6 @@
 #include "cell.h"
 
-static cellptr cellstack[100];
+static cellptr cellstack[10000];
 static int sp;
 
 void push(cellptr cell) {
