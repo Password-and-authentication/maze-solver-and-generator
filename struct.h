@@ -1,12 +1,7 @@
-#ifndef CELL
-#define CELL
+#ifndef H
+#define H
 
 #include <stddef.h>
-#define LEFT 0
-#define RIGHT 1
-#define TOP 2 
-#define BOT 3
-
 typedef struct cellstruct {
     bool bottom_wall: 1;
     bool right_wall: 1;
@@ -18,5 +13,18 @@ typedef struct mazestruct {
     size_t height;
     cell *cells;
 } Maze;
+
+typedef struct {
+    size_t x;
+    size_t y;
+} point;
+
+typedef enum {
+    LEFT,
+    RIGHT,
+    TOP,
+    BOTTOM
+} direction;
+    
 
 #endif

@@ -1,12 +1,13 @@
-#include "cell.h"
+#include "struct.h"
 
-static cell* cellstack[10000];
+static point stack[10000];
 static int sp;
 
-void push(cell* cell) {
-    cellstack[sp++] = cell;   
+void push(point p) {
+    stack[sp++] = p;   
 }
 
-cell* pop() {
-    return (sp > 0) ? cellstack[--sp] : NULL;
+point pop() {
+    if (sp > 0) return stack[--sp];
 }
+
