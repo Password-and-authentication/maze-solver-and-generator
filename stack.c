@@ -1,12 +1,12 @@
 #include "cell.h"
 
-static cellptr cellstack[10000];
+static cell* cellstack[10000];
 static int sp;
 
-void push(cellptr cell) {
+void push(cell* cell) {
     cellstack[sp++] = cell;   
 }
 
-cellptr pop() {
+cell* pop() {
     return (sp > 0) ? cellstack[--sp] : NULL;
 }
