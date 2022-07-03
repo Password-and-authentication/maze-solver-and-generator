@@ -6,13 +6,8 @@
 #include "stack.c"
 #include "struct.h"
 
-
-#define BOT_WALL 0
-#define RIGHT_WALL 1
-
 static int rowMAX;
 static int colMAX;
-
 
 void initcells(Maze *maze);
 void printmaze(Maze *maze);
@@ -28,33 +23,21 @@ int main(int argc, char *argv[]) {
         colMAX = rowMAX = 7; // default 
     } else colMAX = rowMAX = (atoi(argv[1]));
 
-    Maze maze = {colMAX, rowMAX};
-    
+    stack = malloc((rowMAX * colMAX) * sizeof(point));
+    Maze maze = {colMAX, rowMAX, malloc(rowMAX * colMAX)};
 
     initcells(&maze);
     generatemaze(&maze);
     printmaze(&maze);
 
     putchar('\n');
-
-    
+  
     return 0;
 }
 
-cell *cell_at(Maze *maze, size_t x, size_t y) {
-    return &maze->cells[x + y * maze->width];
-}
-
-bool is_visited(Maze *maze, size_t x, size_t y) {
-    return (*cell_at(maze, x, y)).visited;
-}
-
-int getrand(int min, int max) {
-    return (rand() % (max - min + 1) + min);
-}
-
 void generatemaze(Maze *maze) {
-    cell *start = maze->cells;
+    cell *cell_at(Maze *maze, size_t x, size_t y);
+    bool is_visited(Maze *maze, size_t x, size_t y);
     cell *getneighbor(Maze *maze, point *p, direction *dir);
     bool allVisited(Maze *maze, point* p);
 
@@ -62,12 +45,10 @@ void generatemaze(Maze *maze) {
     point p = {0, 0};
     push(p);
 
-
     while (sp > 0) {
         p = pop();
         cell* current = cell_at(maze, p.x, p.y);
         if (!allVisited(maze, &p)) {
-            printf("%zu %zu\n", p.x, p.y);
             push(p);
             cell* n = getneighbor(maze, &p, &d);
             
@@ -90,8 +71,44 @@ void generatemaze(Maze *maze) {
             push(p);
         }      
     }
+}
 
-    
+cell *cell_at(Maze *maze, size_t x, size_t y) {
+    return &maze->cells[x + y * maze->width];
+}
+
+bool is_visited(Maze *maze, size_t x, size_t y) {
+    return (*cell_at(maze, x, y)).visited;
+}
+
+
+void printmaze(Maze *maze) {
+    cell *cptr = maze->cells;
+    size_t i, j;
+    for (j = 0; j <= (colMAX * 2); ++j) putchar('_');
+    for (i = 0; i < (colMAX * rowMAX); ++i) {
+        if (i % colMAX == 0) {
+            putchar('\n');
+            putchar('|');
+        }
+        if (cptr->bottom_wall) {    
+            putchar('_');
+        } else putchar(' ');
+        if (cptr->right_wall) {
+            putchar('|');
+        } else putchar(' ');
+        cptr++;
+    }
+}
+
+void initcells(Maze *maze) {
+    cell *cellptr = maze->cells;
+    size_t i;
+    for (i = 0; i < (rowMAX * colMAX); ++i) {
+        cellptr->visited = false;
+        cellptr->bottom_wall = true;
+        cellptr++->right_wall = true;
+    } 
 }
 
 bool allVisited(Maze *maze, point *p) {
@@ -107,38 +124,9 @@ bool allVisited(Maze *maze, point *p) {
     return true;
 }
 
-void printmaze(Maze *maze) {
-    cell *cptr = maze->cells;
-    size_t i, j;
-    for (j = 0; j <= (colMAX * 2); ++j) putchar('_');
-    for (i = 0; i < (colMAX * rowMAX); ++i) {
-        if (i % colMAX == 0) {
-            putchar(10);
-            putchar('|');
-        }
-        if (cptr->bottom_wall) {    
-            putchar('_');
-        } else putchar(32);
-        if (cptr->right_wall) {
-            putchar('|');
-        } else putchar(32);
-        cptr++;
-    }
-}
-
-void initcells(Maze *maze) {
-    maze->cells = malloc(colMAX * rowMAX);
-    cell *cellptr = maze->cells;
-    size_t i;
-    for (i = 0; i < (rowMAX * colMAX); ++i) {
-        cellptr->visited = false;
-        cellptr->bottom_wall = true;
-        cellptr++->right_wall = true;
-    } 
-}
-
 
 cell* getneighbor(Maze *maze, point *p, direction *dir) {
+    int getrand(int, int);
     *dir = getrand(0, 3);
     switch (*dir) {
     case LEFT:
@@ -167,4 +155,8 @@ cell* getneighbor(Maze *maze, point *p, direction *dir) {
         return getneighbor(maze, p, dir);
     }
     return cell_at(maze, p->x, p->y);
+}
+
+int getrand(int min, int max) {
+    return (rand() % (max - min + 1) + min);
 }

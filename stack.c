@@ -1,6 +1,6 @@
 #include "struct.h"
 
-static point stack[10000];
+static point *stack;
 static int sp;
 
 void push(point p) {
