@@ -7,6 +7,7 @@ typedef struct cellstruct {
     bool bottom_wall: 1;
     bool right_wall: 1;
     bool visited: 1;
+    bool wrongway: 1;
 } cell;
 
 typedef struct mazestruct {
