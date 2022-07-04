@@ -15,29 +15,23 @@ int main(int argc, char *argv[]) {
     initcells(&maze);
     point p = {0, 0};
     push(p);
-    if (argc > 1 && strcmp(argv[1], "step") == 0) {
-        step(&maze);
-    } else {
-        insta(&maze);
-        putchar('\n');
+    while (sp > 0) {
+        generatemaze(&maze);
     }
-
-    printf("\nstarting point:\n");
-    int c = getchar();
-    point s = {0, 1};
-    point e = {6, 0};
+    printmaze(&maze);
+    putchar('\n');
+    
     cell* cellptr = maze.cells;
-
     for (int i = 0; i < (rowMAX * colMAX); ++i) {
-        cellptr->path = false;
+        cellptr->path = false;                          // reset
         cellptr++->visited = false;    
     }
-    solve(&maze, s, e, colMAX, rowMAX);
+
+    point s = {0, 0};               // custom starting / end point not yet implemented
+    point e = {6, 6};
+    solve(&maze, s, e);
 
     printmaze(&maze);
-
-    
-  
     return 0;
 }
 

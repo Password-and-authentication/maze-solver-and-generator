@@ -1,9 +1,6 @@
 #ifndef H
 #define H
-
 #include <stddef.h>
-
-
 
 typedef struct cellstruct {
     bool bottom_wall: 1;
@@ -30,5 +27,4 @@ typedef enum {
     BOTTOM
 } direction;
     
-
 #endif
