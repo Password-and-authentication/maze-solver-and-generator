@@ -6,7 +6,9 @@
 #include <string.h>
 #include "stack.c"
 #include "../struct.h"
+#include "../cell.c"
 #include "loop.c"
+
 
 static int rowMAX;
 static int colMAX;
@@ -15,8 +17,6 @@ void initcells(Maze *maze);
 void printmaze(Maze *maze);
 void generatemaze(Maze *maze);
 int getrand();
-
-cell *cell_at(Maze *maze, size_t x, size_t y);
 
 
 void generatemaze(Maze *maze) {
@@ -53,15 +53,6 @@ void generatemaze(Maze *maze) {
         n->visited = true;
         push(p);
     }      
-}
-
-
-cell *cell_at(Maze *maze, size_t x, size_t y) {
-    return &maze->cells[x + y * maze->width];
-}
-
-bool is_visited(Maze *maze, size_t x, size_t y) {
-    return (*cell_at(maze, x, y)).visited;
 }
 
 void printmaze(Maze *maze) {

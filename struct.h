@@ -2,6 +2,7 @@
 #define H
 
 #include <stddef.h>
+
 typedef struct cellstruct {
     bool bottom_wall: 1;
     bool right_wall: 1;
