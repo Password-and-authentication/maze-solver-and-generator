@@ -9,15 +9,9 @@
 #include "../cell.c"
 #include "loop.c"
 
-
-static int rowMAX;
-static int colMAX;
-
 void initcells(Maze *maze);
-void printmaze(Maze *maze);
 void generatemaze(Maze *maze);
 int getrand();
-
 
 void generatemaze(Maze *maze) {
     cell *cell_at(Maze *maze, size_t x, size_t y);
@@ -31,8 +25,6 @@ void generatemaze(Maze *maze) {
     p = pop();
     cell* current = cell_at(maze, p.x, p.y);
     if (!allVisited(maze, &p)) {
-
-
         push(p);
         cell* n = getneighbor(maze, &p, &d);
             
@@ -53,25 +45,6 @@ void generatemaze(Maze *maze) {
         n->visited = true;
         push(p);
     }      
-}
-
-void printmaze(Maze *maze) {
-    cell *cptr = maze->cells;
-    size_t i, j;
-    for (j = 0; j <= (colMAX * 2); ++j) putchar('_');
-    for (i = 0; i < (colMAX * rowMAX); ++i) {
-        if (i % colMAX == 0) {
-            putchar('\n');
-            putchar('|');
-        }
-        if (cptr->bottom_wall) {    
-            putchar('_');
-        } else putchar(' ');
-        if (cptr->right_wall) {
-            putchar('|');
-        } else putchar(' ');
-        cptr++;
-    }
 }
 
 void initcells(Maze *maze) {

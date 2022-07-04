@@ -1,9 +1,9 @@
 #include "stack.c"
 #include <stdio.h>
+#include "../maze.c"
 
 
 void generatemaze(Maze *maze);
-void printmaze(Maze *maze);
 
 void step(Maze *maze) {
     
@@ -16,6 +16,7 @@ void step(Maze *maze) {
             putchar('\n');
         }  
     }
+    printf("#");
 }
 
 void insta(Maze *maze) {

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "generate/generate.c"
 #include "solve/solve.c"
+#include "maze.c"
 
 int main(int argc, char *argv[]) {
     srand(time(0));
@@ -21,29 +22,20 @@ int main(int argc, char *argv[]) {
         putchar('\n');
     }
 
-    printf("\nSolve? (y/n)\n");
+    printf("\nstarting point:\n");
     int c = getchar();
     point s = {0, 1};
-    point e = {2, 6};
+    point e = {6, 0};
     cell* cellptr = maze.cells;
 
     for (int i = 0; i < (rowMAX * colMAX); ++i) {
-        cellptr++->visited = false;
+        cellptr->path = false;
+        cellptr++->visited = false;    
     }
-    point path[10000];
-    solve(&maze, s, e, path, colMAX, rowMAX);
-    //printf("%zu %zu \n", h.x, h.y);
-    //printf("\n%zu %zu\n", path[2].x, path[2].y);
-    cell *fuck = maze.cells;
+    solve(&maze, s, e, colMAX, rowMAX);
 
+    printmaze(&maze);
 
-   /* for (int i = 0; i < (rowMAX * colMAX); ++i) {
-        if (i % colMAX == 0) {
-            putchar(10);
-        }
-
-        printf("%d", (fuck++->visited));
-    }*/
     
   
     return 0;

@@ -11,54 +11,40 @@ bool rightwall(Maze *maze, point *p);
 bool equal(point p, point p2);
 
 
-void solve(Maze *maze, point p, point e, point path[], int colMAX, int rowMAX) {
+void solve(Maze *maze, point p, point e, int colMAX, int rowMAX) {
     static bool found = false;
-    static bool paths;
     if (found) return;
 
     if (equal(p, e)) {
         found = true;  
     }
-    printf("%zu %zu %d\n", p.x, p.y, paths);
 
-    static int pathcount = 0; 
-
-    ++pathcount; 
-    //printf("%d  \n", equal(p, e));
-    *path++ = p;
     (*cell_at(maze, p.x, p.y)).visited = true;
     point temp;
     if (p.x < (colMAX - 1) && !rightwall(maze, &p) && !is_visited(maze, p.x + 1, p.y)) {
         temp = p;
         temp.x++;
-        ++paths;
-        solve(maze, temp, e, path, colMAX, rowMAX);
-        //printf("%d ", found);
+        solve(maze, temp, e, colMAX, rowMAX);
     } 
     if (p.x > 0 && !leftwall(maze, &p) && !is_visited(maze, p.x - 1, p.y)) {
         temp = p;
         temp.x--;
-        ++paths;
-        solve(maze, temp, e, path, colMAX, rowMAX);
+        solve(maze, temp, e, colMAX, rowMAX);
     }
     if (p.y > 0 && !topwall(maze, &p) && !is_visited(maze, p.x, p.y - 1)) {
         temp = p;
         temp.y--;
-        ++paths;
-        solve(maze, temp, e, path, colMAX, rowMAX);
-        //printf("%d ", found);
+        solve(maze, temp, e, colMAX, rowMAX);
     }
     if (p.y < (rowMAX - 1) && !botwall(maze, &p) && !is_visited(maze, p.x, p.y + 1)) {
         temp = p;
         temp.y++;
-        ++paths;
-        solve(maze, temp, e, path, colMAX, rowMAX);
-        //printf("%d ", found);
+        solve(maze, temp, e, colMAX, rowMAX);
     }
 
-    //printf("%zu %zu\n", p.x, p.y);
-    
-    //printf("%zu %zu\n", p.x, p.y);
+    if (found) {
+        (*cell_at(maze, p.x, p.y)).path = true;
+    }
     return;
 }
 
