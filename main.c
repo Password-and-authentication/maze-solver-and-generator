@@ -21,20 +21,6 @@ int main(int argc, char *argv[]) {
         putchar('\n');
     }
 
-    printf("\nSolve? (y/n)\n");
-    int c = getchar();
-    point s = {0, 1};
-    point e = {3, 0};
-    cell* cellptr = maze.cells;
-
-    for (int i = 0; i < (rowMAX * colMAX); ++i) {
-        cellptr++->visited = false;
-    }
-    
-    point h = solve(&maze, s, e, colMAX, rowMAX);
-    //printf("%zu %zu \n", h.x, h.y);
-    cell *fuck = maze.cells;
-
 
     /*for (int i = 0; i < (rowMAX * colMAX); ++i) {
         if (i % colMAX == 0) {
