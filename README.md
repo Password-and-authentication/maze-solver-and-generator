@@ -2,7 +2,8 @@
 Made in C.
 
 
-./main
+
+`./main`  
 
 
 ![alt text](https://imgur.com/ajXueC7.png)
