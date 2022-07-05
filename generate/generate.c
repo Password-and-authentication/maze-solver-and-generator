@@ -7,7 +7,7 @@
 #include "stack.c"
 #include "../struct.h"
 #include "../cell.c"
-#include "loop.c"
+#include "../maze.c"
 
 void initcells(Maze *maze);
 void generatemaze(Maze *maze);

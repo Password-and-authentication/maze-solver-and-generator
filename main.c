@@ -8,7 +8,7 @@ int main(int argc, char *argv[]) {
 
     if (argc == 1) {    
         colMAX = rowMAX = 7; // default 
-    } else colMAX = rowMAX = (atoi(argv[2]));
+    } else colMAX = rowMAX = (atoi(argv[1]));
     stack = malloc((rowMAX * colMAX) * sizeof(point));
     Maze maze = {colMAX, rowMAX, malloc(rowMAX * colMAX)};
 
@@ -41,10 +41,10 @@ int main(int argc, char *argv[]) {
         }
         break; 
     }
-    //solve(&maze, s, e);
+    solve(&maze, s, e);
 
-    //printmaze(&maze);
-    //putchar('\n');
+    printmaze(&maze);
+    putchar('\n');
     return 0;
 }
 
@@ -62,6 +62,7 @@ point getpoint() {
     while ((sy[j] = str[i]) != '\n' && ++i && ++j);
     sy[j] = '\n';
     point p = {atoi(sx), atoi(sy)};
+    printf("%zu %zu \n", p.x, p.y);
     return p;
 }   
 
