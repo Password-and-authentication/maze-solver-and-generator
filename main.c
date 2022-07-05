@@ -45,6 +45,8 @@ int main(int argc, char *argv[]) {
 
     printmaze(&maze);
     putchar('\n');
+    putchar('\n');
+    putchar('\n');
     return 0;
 }
 
