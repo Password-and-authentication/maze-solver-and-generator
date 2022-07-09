@@ -1,6 +1,6 @@
-#include "../struct.h"
 #ifndef S 
 #define S
+#include "../point.h"
 
 static point *stack;
 static int sp;

@@ -2,6 +2,9 @@
 #include "generate/generate.c"
 #include "solve/solve.c"
 #include "maze.c"
+#include "point.c"
+
+
 
 int main(int argc, char *argv[]) {
     srand(time(0));
@@ -49,22 +52,3 @@ int main(int argc, char *argv[]) {
     putchar('\n');
     return 0;
 }
-
-point getpoint() {
-    char str[10];
-    char sx[10];
-    char sy[10];
-
-    scanf("%s", str);
-    int i, j;
-    i = j = 0;
-    while ((sx[i] = str[i]) != ',' && ++i);
-    sx[i] = '\n';
-    ++i;
-    while ((sy[j] = str[i]) != '\n' && ++i && ++j);
-    sy[j] = '\n';
-    point p = {atoi(sx), atoi(sy)};
-    printf("%zu %zu \n", p.x, p.y);
-    return p;
-}   
-

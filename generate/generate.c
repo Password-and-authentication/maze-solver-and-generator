@@ -5,17 +5,15 @@
 #include <stddef.h>
 #include <string.h>
 #include "stack.c"
-#include "../struct.h"
-#include "../cell.c"
-#include "../maze.c"
+#include "../cell.h"
+#include "../maze.h"
 
+int colMAX, rowMAX;
 void initcells(Maze *maze);
 void generatemaze(Maze *maze);
 int getrand();
 
 void generatemaze(Maze *maze) {
-    cell *cell_at(Maze *maze, size_t x, size_t y);
-    bool is_visited(Maze *maze, size_t x, size_t y);
     cell *getneighbor(Maze *maze, point *p, direction *dir);
     bool allVisited(Maze *maze, point* p);
 

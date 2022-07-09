@@ -1,9 +1,7 @@
-#ifndef M 
-#define M
-#include "struct.h"
+#include "cell.h"
+#include "maze.h"
+#include <stdbool.h>
 #include <stdio.h>
-
-int colMAX, rowMAX;
 
 void printmaze(Maze *maze) {
     cell *cptr = maze->cells;
@@ -28,5 +26,11 @@ void printmaze(Maze *maze) {
     }
 }
 
+cell *cell_at(Maze *maze, size_t x, size_t y) {
+    return &maze->cells[x + y * maze->width];
+}
 
-#endif
+bool is_visited(Maze *maze, size_t x, size_t y) {
+    return (*cell_at(maze, x, y)).visited;
+}
+

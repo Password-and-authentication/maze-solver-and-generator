@@ -1,8 +1,9 @@
-#include "../struct.h"
-#include "../maze.c"
-#include "../cell.c"
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "../maze.h"
+#include "../point.h"
+
 
 
 bool topwall(Maze *maze, point *p);
